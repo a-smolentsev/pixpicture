@@ -34,8 +34,6 @@ class CategoryAdapter(): RecyclerView.Adapter<CategoryAdapter.ItemAdapterViewHol
         viewHolder.view.setOnClickListener{
             onShopItemClickListener?.invoke(_itemList)
         }
-
-        Log.d("Adapter",_itemList.name)
         viewHolder.viewTitle.text = _itemList.name
         viewHolder.image.setImageResource(CategoryImageSet.imageSet(_itemList.id))
 
