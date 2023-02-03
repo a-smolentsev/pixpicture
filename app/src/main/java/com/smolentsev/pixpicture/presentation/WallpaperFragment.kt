@@ -2,8 +2,8 @@ package com.smolentsev.pixpicture.presentation
 
 import android.app.WallpaperManager
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.transition.Transition
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +13,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.smolentsev.pixpicture.R
 import java.io.IOException
 
@@ -63,10 +64,10 @@ class WallpaperFragment : Fragment() {
         Glide.with(requireContext())
             .asBitmap()
             .load(imageURL)
-            .into(object : SimpleTarget<Bitmap?>() {
+            .into(object : CustomTarget<Bitmap?>() {
                 override fun onResourceReady(
                     resource: Bitmap,
-                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap?>?
+                    transition: Transition<in Bitmap?>?
                 ) {
                     try {
                         Toast.makeText(requireContext(),"Изображение установлено",Toast.LENGTH_SHORT).show()
@@ -74,6 +75,10 @@ class WallpaperFragment : Fragment() {
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
                 }
             })
     }
