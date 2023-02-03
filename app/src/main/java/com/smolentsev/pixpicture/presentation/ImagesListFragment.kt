@@ -113,6 +113,7 @@ class ImagesListFragment : Fragment() {
                     putSerializable(CATEGORY_ID, category)
                 }
             }
+
         }
     }
 
