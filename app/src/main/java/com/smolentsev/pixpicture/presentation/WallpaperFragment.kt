@@ -86,7 +86,6 @@ class WallpaperFragment : Fragment() {
     private fun setImage(imageUrl: String, view: View){
         Glide.with(view)
             .load(imageUrl)
-            .placeholder(R.drawable.load_image)
             .centerCrop()
             .into(wallpaper)
     }
