@@ -19,18 +19,11 @@ import com.smolentsev.pixpicture.R
 import java.io.IOException
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-
 class WallpaperFragment : Fragment() {
 
     private lateinit var imageURL: String
     private lateinit var wallpaper: ImageView
     private lateinit var button: Button
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +34,7 @@ class WallpaperFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView(view)
-        setImage(imageURL,view)
+        setImage(imageURL, view)
         button.setOnClickListener {
             setAsWallpaper()
         }
@@ -55,22 +48,25 @@ class WallpaperFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_wallpaper, container, false)
     }
-    private fun checkImageArguments(){
+
+    private fun checkImageArguments() {
         imageURL = requireArguments().getString(IMAGE_PUT).toString()
-        Log.d("Arguments",imageURL)
+        Log.d("Arguments", imageURL)
     }
 
-    fun setAsWallpaper() {
+    private fun setAsWallpaper() {
         Glide.with(requireContext())
             .asBitmap()
             .load(imageURL)
             .into(object : CustomTarget<Bitmap?>() {
                 override fun onResourceReady(
                     resource: Bitmap,
-                    transition: Transition<in Bitmap?>?
+                    transition: Transition<in Bitmap?>?,
                 ) {
                     try {
-                        Toast.makeText(requireContext(),"Изображение установлено",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(),
+                            "Изображение установлено",
+                            Toast.LENGTH_SHORT).show()
                         WallpaperManager.getInstance(requireContext()).setBitmap(resource)
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -83,20 +79,21 @@ class WallpaperFragment : Fragment() {
             })
     }
 
-    private fun setImage(imageUrl: String, view: View){
+    private fun setImage(imageUrl: String, view: View) {
         Glide.with(view)
             .load(imageUrl)
             .centerCrop()
             .into(wallpaper)
     }
 
-    private fun initView(view: View){
+    private fun initView(view: View) {
         wallpaper = view.findViewById(R.id.imageWallpaper)
         button = view.findViewById(R.id.setWallpaper)
     }
 
     companion object {
-       private const val IMAGE_PUT = "Image"
+        private const val IMAGE_PUT = "Image"
+
         @JvmStatic
         fun newInstance(image: String): WallpaperFragment {
             return WallpaperFragment().apply {

@@ -2,10 +2,10 @@ package com.smolentsev.pixpicture.presentation
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.smolentsev.pixpicture.R
@@ -17,11 +17,6 @@ import com.smolentsev.pixpicture.presentation.viewmodel.CategoryViewModel
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CategoryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CategoryFragment : Fragment() {
     private lateinit var viewModel: CategoryViewModel
     private lateinit var categoryAdapter: CategoryAdapter
@@ -50,12 +45,12 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[CategoryViewModel::class.java]
-        viewModel.categoryList.observe(viewLifecycleOwner){
-            Log.d("Category",it.toString())
+        viewModel.categoryList.observe(viewLifecycleOwner) {
+            Log.d("Category", it.toString())
             categoryAdapter.category = it
         }
         setupRecycleView(view)
-        Log.d("recycler",setupRecycleView(view).toString())
+        Log.d("recycler", setupRecycleView(view).toString())
 
     }
 
@@ -73,9 +68,9 @@ class CategoryFragment : Fragment() {
         }
     }
 
-    private fun launchCategoryImages(category: Category){
+    private fun launchCategoryImages(category: Category) {
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container,ImagesListFragment.newInstance(category))
+            .replace(R.id.main_container, ImagesListFragment.newInstance(category))
             .addToBackStack(null)
             .commit()
     }

@@ -8,13 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.smolentsev.pixpicture.constants.Companion.LOADING
 import com.smolentsev.pixpicture.constants.Companion.SUCCESS_LOAD
 import com.smolentsev.pixpicture.data.Hit
-import com.smolentsev.pixpicture.data.ImageApi
-import com.smolentsev.pixpicture.data.ImagesCategory
 import com.smolentsev.pixpicture.data.RetrofitInstance
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
 
-class ImageListViewModel: ViewModel() {
+class ImageListViewModel : ViewModel() {
     private val _image = MutableLiveData<List<Hit>>()
     val image: LiveData<List<Hit>>
         get() = _image
@@ -23,17 +20,16 @@ class ImageListViewModel: ViewModel() {
         get() = _stateLoading
 
 
-    fun getImage(category:String){
+    fun getImage(category: String) {
         viewModelScope.launch {
             _stateLoading.value = LOADING
-            val result = RetrofitInstance.api.getImage(category.toLowerCase())
-            if(result.isSuccessful){
-                _image.value=result.body()!!.hits
+            val result = RetrofitInstance.api.getImage(category.lowercase())
+            if (result.isSuccessful) {
+                _image.value = result.body()!!.hits
                 _stateLoading.value = SUCCESS_LOAD
                 Log.d("Response: ", _image.value?.size.toString())
-                    Log.d("response: ", result.isSuccessful.toString())
-            }
-            else Log.d("response: ",result.errorBody().toString())
+                Log.d("response: ", result.isSuccessful.toString())
+            } else Log.d("response: ", result.errorBody().toString())
 
         }
     }

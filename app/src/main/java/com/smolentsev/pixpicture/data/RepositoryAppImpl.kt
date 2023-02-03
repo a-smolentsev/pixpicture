@@ -24,8 +24,5 @@ object RepositoryAppImpl:RepositoryApp {
     override fun getCategoryList(): LiveData<List<Category>> {
         return categoryListLD
     }
-    private fun updateCategory(){
-        categoryListLD.value=categoryList.toList()
-    }
 }
 

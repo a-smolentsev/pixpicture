@@ -15,7 +15,6 @@ import com.smolentsev.pixpicture.R
 import com.smolentsev.pixpicture.constants.Companion.FAIL_LOAD
 import com.smolentsev.pixpicture.constants.Companion.LOADING
 import com.smolentsev.pixpicture.constants.Companion.SUCCESS_LOAD
-import com.smolentsev.pixpicture.data.Hit
 import com.smolentsev.pixpicture.domain.entity.Category
 import com.smolentsev.pixpicture.presentation.adapter.ImageAllAdapter
 import com.smolentsev.pixpicture.presentation.viewmodel.ImageListViewModel
@@ -32,7 +31,7 @@ class ImagesListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkCategory()
-        Log.d("fragment_Category",category.name)
+        Log.d("fragment_Category", category.name)
     }
 
     override fun onCreateView(
@@ -49,29 +48,28 @@ class ImagesListFragment : Fragment() {
         viewModel = ViewModelProvider(this)[ImageListViewModel::class.java]
         nameCategory.text = category.name
         viewModel.getImage(category.name)
-        viewModel.image.observe(viewLifecycleOwner){
-            Log.d("Category",it.toString())
+        viewModel.image.observe(viewLifecycleOwner) {
+            Log.d("Category", it.toString())
             imagePreviewAdapter.image = it
 
         }
         setupRecycleView()
 
-        viewModel.stateLoading.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.stateLoading.observe(viewLifecycleOwner) {
+            when (it) {
                 LOADING -> progressBar.visibility = View.VISIBLE
                 SUCCESS_LOAD -> {
                     progressBar.visibility = View.INVISIBLE
                     recyclerView.visibility = View.VISIBLE
                 }
-                FAIL_LOAD ->{
+                FAIL_LOAD -> {
                     recyclerView.visibility = View.INVISIBLE
 
                 }
             }
         }
-
-
     }
+
     private fun setupRecycleView() {
         imagePreviewAdapter = ImageAllAdapter()
         val layoutManager = GridLayoutManager(context, 2)
@@ -85,6 +83,7 @@ class ImagesListFragment : Fragment() {
         nameCategory = view.findViewById(R.id.categoryName)
         progressBar = view.findViewById(R.id.progressBar)
     }
+
     private fun clickItemListener() {
         imagePreviewAdapter.onImageClickListener = {
             launchWallpaperFragment(it.largeImageURL)
@@ -92,19 +91,21 @@ class ImagesListFragment : Fragment() {
         }
     }
 
-    private fun launchWallpaperFragment(imageURL:String){
+    private fun launchWallpaperFragment(imageURL: String) {
         Log.d("Arguments0", imageURL)
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container,WallpaperFragment.newInstance(imageURL))
+            .replace(R.id.main_container, WallpaperFragment.newInstance(imageURL))
             .addToBackStack(null)
             .commit()
     }
 
-    private fun checkCategory(){
+    private fun checkCategory() {
         category = requireArguments().getSerializable(CATEGORY_ID) as Category
     }
+
     companion object {
         private const val CATEGORY_ID = "category_id"
+
         @JvmStatic
         fun newInstance(category: Category): ImagesListFragment {
             return ImagesListFragment().apply {

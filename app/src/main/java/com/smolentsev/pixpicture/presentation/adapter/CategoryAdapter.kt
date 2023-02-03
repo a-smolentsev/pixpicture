@@ -7,10 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.smolentsev.pixpicture.R
-import com.smolentsev.pixpicture.domain.entity.Category
 import com.smolentsev.pixpicture.domain.CategoryImageSet
+import com.smolentsev.pixpicture.domain.entity.Category
 
-class CategoryAdapter(): RecyclerView.Adapter<CategoryAdapter.ItemAdapterViewHolder>() {
+class CategoryAdapter() : RecyclerView.Adapter<CategoryAdapter.ItemAdapterViewHolder>() {
     var category = listOf<Category>()
         set(value) {
             field = value
@@ -20,7 +20,8 @@ class CategoryAdapter(): RecyclerView.Adapter<CategoryAdapter.ItemAdapterViewHol
     var onShopItemClickListener: ((Category) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemAdapterViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.category_adapter,parent,false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.category_adapter, parent, false)
         return ItemAdapterViewHolder(view)
 
     }
@@ -28,7 +29,7 @@ class CategoryAdapter(): RecyclerView.Adapter<CategoryAdapter.ItemAdapterViewHol
     override fun onBindViewHolder(viewHolder: ItemAdapterViewHolder, position: Int) {
         val _itemList = category[position]
 
-        viewHolder.view.setOnClickListener{
+        viewHolder.view.setOnClickListener {
             onShopItemClickListener?.invoke(_itemList)
         }
         viewHolder.viewTitle.text = _itemList.name
@@ -40,7 +41,7 @@ class CategoryAdapter(): RecyclerView.Adapter<CategoryAdapter.ItemAdapterViewHol
         return category.size
     }
 
-    class ItemAdapterViewHolder(val view: View): RecyclerView.ViewHolder(view){
+    class ItemAdapterViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val viewTitle = view.findViewById<TextView>(R.id.category_text)
         val image = view.findViewById<ImageView>(R.id.imageBg)
 
