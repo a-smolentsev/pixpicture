@@ -24,7 +24,6 @@ import com.smolentsev.pixpicture.presentation.viewmodel.ImageListViewModel
 class ImagesListFragment : Fragment() {
     private lateinit var category: Category
     private lateinit var nameCategory: TextView
-    private lateinit var wallpaper: Hit
     private lateinit var progressBar: ProgressBar
     private lateinit var viewModel: ImageListViewModel
     private lateinit var imagePreviewAdapter: ImageAllAdapter
@@ -89,7 +88,7 @@ class ImagesListFragment : Fragment() {
     private fun clickItemListener() {
         imagePreviewAdapter.onImageClickListener = {
             launchWallpaperFragment(it.largeImageURL)
-            Log.d("Click_button", it.toString())
+            Log.d("Click_button", it.largeImageURL)
         }
     }
 

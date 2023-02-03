@@ -36,7 +36,7 @@ class ImageAllAdapter(): RecyclerView.Adapter<ImageAllAdapter.ItemAdapterViewHol
         }
         Glide.with(viewHolder.itemView)
             .load(_image.largeImageURL)
-            .placeholder(R.drawable.load_image)
+            .placeholder(R.color.loadcolor)
             .override(1500,1500)
             .into(viewHolder.imagePreview)
 
