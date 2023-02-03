@@ -31,11 +31,12 @@ class ImageAllAdapter(): RecyclerView.Adapter<ImageAllAdapter.ItemAdapterViewHol
 
     override fun onBindViewHolder(viewHolder: ItemAdapterViewHolder, position: Int) {
         val _image = image[position]
-
-
-        Log.d("Response: ",_image.previewURL)
+        viewHolder.view.setOnClickListener{
+            onImageClickListener?.invoke(_image)
+        }
         Glide.with(viewHolder.itemView)
             .load(_image.largeImageURL)
+            .placeholder(R.drawable.load_image)
             .override(1500,1500)
             .into(viewHolder.imagePreview)
 
