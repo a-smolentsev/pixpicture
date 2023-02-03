@@ -1,6 +1,5 @@
 package com.smolentsev.pixpicture.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,9 +9,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.smolentsev.pixpicture.R
+import com.smolentsev.pixpicture.domain.entity.Category
+import com.smolentsev.pixpicture.presentation.adapter.CategoryAdapter
+import com.smolentsev.pixpicture.presentation.viewmodel.CategoryViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -26,8 +27,6 @@ class CategoryFragment : Fragment() {
     private lateinit var categoryAdapter: CategoryAdapter
 
 
-
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -64,25 +63,22 @@ class CategoryFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.category_recyclerview)
         categoryAdapter = CategoryAdapter()
         recyclerView.adapter = categoryAdapter
+        clickItemListener()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CategoryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CategoryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun clickItemListener() {
+        categoryAdapter.onShopItemClickListener = {
+            launchCategoryImages(it)
+            Log.d("Click_button", it.toString())
+        }
     }
+
+    private fun launchCategoryImages(category: Category){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container,ImagesListFragment.newInstance(category))
+            .addToBackStack(null)
+            .commit()
+    }
+
+
 }

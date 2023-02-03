@@ -1,4 +1,4 @@
-package com.smolentsev.pixpicture.presentation
+package com.smolentsev.pixpicture.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.smolentsev.pixpicture.data.RepositoryAppImpl
@@ -9,4 +9,5 @@ class CategoryViewModel: ViewModel() {
     private val getCategoryListUseCase = GetCategoryListUseCase(repository)
 
     val categoryList = getCategoryListUseCase()
+
 }
