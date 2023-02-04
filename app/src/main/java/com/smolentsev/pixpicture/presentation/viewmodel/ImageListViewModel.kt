@@ -6,15 +6,18 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
 import android.util.Log
 import androidx.lifecycle.*
-import com.smolentsev.pixpicture.ImageApp
+import com.smolentsev.pixpicture.domain.ImageApp
 import com.smolentsev.pixpicture.constants.Companion.FAIL_LOAD
 import com.smolentsev.pixpicture.constants.Companion.LOADING
 import com.smolentsev.pixpicture.constants.Companion.SUCCESS_LOAD
-import com.smolentsev.pixpicture.data.Hit
-import com.smolentsev.pixpicture.data.ImagesCategory
+import com.smolentsev.pixpicture.domain.entity.Hit
+import com.smolentsev.pixpicture.domain.entity.ImagesCategory
 import com.smolentsev.pixpicture.data.RetrofitInstance
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.net.SocketException
+import java.security.cert.CertPathValidatorException
+import javax.net.ssl.SSLHandshakeException
 
 class ImageListViewModel(app: Application) : AndroidViewModel(app) {
     private val _image = MutableLiveData<List<Hit>>()
@@ -33,13 +36,19 @@ class ImageListViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun checkResponse(response: Response<ImagesCategory>){
         _stateLoading.value = LOADING
-        if(response.isSuccessful){
-            _stateLoading.value = SUCCESS_LOAD
-        } else{
-            Log.e("Error", response.errorBody().toString())
-            _stateLoading.value = FAIL_LOAD
+        try {
+            if(response.isSuccessful){
+                _stateLoading.value = SUCCESS_LOAD
+            } else{
+                Log.e("Error", response.errorBody().toString())
+                _stateLoading.value = FAIL_LOAD
+            }
+        } catch (e: SocketException) {
+            Log.e("Error", "Socket exception: ${e.message}")
         }
+
     }
+
 
     private suspend fun safeCallGetImages(category: String){
         _stateLoading.value = LOADING

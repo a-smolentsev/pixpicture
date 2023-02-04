@@ -1,4 +1,4 @@
-package com.smolentsev.pixpicture
+package com.smolentsev.pixpicture.domain
 
 import android.app.Application
 

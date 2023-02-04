@@ -8,7 +8,6 @@ import com.smolentsev.pixpicture.domain.repository.RepositoryApp
 object RepositoryAppImpl:RepositoryApp {
     private var categoryListLD = MutableLiveData<List<Category>>()
     private var categoryList = mutableListOf<Category>()
-
     init {
         val categoryLis = mutableListOf(Category(0,"Nature"),
         Category(1,"Animals"),

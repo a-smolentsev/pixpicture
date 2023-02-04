@@ -1,9 +1,9 @@
 package com.smolentsev.pixpicture.data
 
 import com.smolentsev.pixpicture.constants.Companion.KEY_PUBLIC
+import com.smolentsev.pixpicture.domain.entity.ImagesCategory
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ImageApi {

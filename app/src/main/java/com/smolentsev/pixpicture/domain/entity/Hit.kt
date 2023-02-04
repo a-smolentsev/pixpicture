@@ -1,4 +1,4 @@
-package com.smolentsev.pixpicture.data
+package com.smolentsev.pixpicture.domain.entity
 
 
 import kotlinx.serialization.SerialName

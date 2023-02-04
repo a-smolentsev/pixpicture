@@ -7,14 +7,10 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.smolentsev.pixpicture.R
-import com.smolentsev.pixpicture.data.Hit
+import com.smolentsev.pixpicture.domain.entity.Hit
 
 class ImageAllAdapter() : RecyclerView.Adapter<ImageAllAdapter.ItemAdapterViewHolder>() {
     var image = listOf<Hit>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
     var onImageClickListener: ((Hit) -> Unit)? = null
 
@@ -33,7 +29,7 @@ class ImageAllAdapter() : RecyclerView.Adapter<ImageAllAdapter.ItemAdapterViewHo
         Glide.with(viewHolder.itemView)
             .load(_image.largeImageURL)
             .placeholder(R.color.loadcolor)
-            .override(1500, 1500)
+            .override(1000, 1000)
             .into(viewHolder.imagePreview)
 
     }

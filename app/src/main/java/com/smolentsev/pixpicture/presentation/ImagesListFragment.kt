@@ -58,10 +58,15 @@ class ImagesListFragment : Fragment() {
 
         viewModel.stateLoading.observe(viewLifecycleOwner) {
             when (it) {
-                LOADING -> progressBar.visibility = View.VISIBLE
+                LOADING -> {
+                    recyclerView.visibility = View.INVISIBLE
+                    progressBar.visibility = View.VISIBLE
+                    failInternet.visibility = View.INVISIBLE
+                }
                 SUCCESS_LOAD -> {
                     progressBar.visibility = View.INVISIBLE
                     recyclerView.visibility = View.VISIBLE
+                    failInternet.visibility = View.INVISIBLE
                 }
                 FAIL_LOAD -> {
                     recyclerView.visibility = View.INVISIBLE
