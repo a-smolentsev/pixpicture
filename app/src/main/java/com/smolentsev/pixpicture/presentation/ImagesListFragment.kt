@@ -23,6 +23,7 @@ import com.smolentsev.pixpicture.presentation.viewmodel.ImageListViewModel
 class ImagesListFragment : Fragment() {
     private lateinit var category: Category
     private lateinit var nameCategory: TextView
+    private lateinit var failInternet: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var viewModel: ImageListViewModel
     private lateinit var imagePreviewAdapter: ImageAllAdapter
@@ -64,7 +65,8 @@ class ImagesListFragment : Fragment() {
                 }
                 FAIL_LOAD -> {
                     recyclerView.visibility = View.INVISIBLE
-
+                    progressBar.visibility = View.INVISIBLE
+                    failInternet.visibility = View.VISIBLE
                 }
             }
         }
@@ -82,6 +84,7 @@ class ImagesListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.allImageRV)
         nameCategory = view.findViewById(R.id.categoryName)
         progressBar = view.findViewById(R.id.progressBar)
+        failInternet = view.findViewById(R.id.failText)
     }
 
     private fun clickItemListener() {

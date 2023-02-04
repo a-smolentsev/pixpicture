@@ -13,7 +13,11 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.smolentsev.pixpicture.R
 import java.io.IOException
@@ -72,11 +76,10 @@ class WallpaperFragment : Fragment() {
                         e.printStackTrace()
                     }
                 }
-
                 override fun onLoadCleared(placeholder: Drawable?) {
-
                 }
-            })
+                })
+
     }
 
     private fun setImage(imageUrl: String, view: View) {
