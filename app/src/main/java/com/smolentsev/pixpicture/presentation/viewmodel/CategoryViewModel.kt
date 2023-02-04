@@ -10,4 +10,6 @@ class CategoryViewModel: ViewModel() {
 
     val categoryList = getCategoryListUseCase()
 
+
+
 }
