@@ -1,13 +1,16 @@
 package com.smolentsev.pixpicture.presentation
 
+import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,9 +18,14 @@ import com.smolentsev.pixpicture.R
 import com.smolentsev.pixpicture.constants.Companion.FAIL_LOAD
 import com.smolentsev.pixpicture.constants.Companion.LOADING
 import com.smolentsev.pixpicture.constants.Companion.SUCCESS_LOAD
+import com.smolentsev.pixpicture.data.ImageApi
 import com.smolentsev.pixpicture.domain.entity.Category
+import com.smolentsev.pixpicture.domain.entity.ImagesCategory
+import com.smolentsev.pixpicture.domain.repository.RepositoryImages
 import com.smolentsev.pixpicture.presentation.adapter.ImageAllAdapter
+import com.smolentsev.pixpicture.presentation.viewmodel.CategoryViewModel
 import com.smolentsev.pixpicture.presentation.viewmodel.ImageListViewModel
+import com.smolentsev.pixpicture.presentation.viewmodel.ImagesListViewModelFactory
 
 
 class ImagesListFragment : Fragment() {
@@ -28,6 +36,7 @@ class ImagesListFragment : Fragment() {
     private lateinit var viewModel: ImageListViewModel
     private lateinit var imagePreviewAdapter: ImageAllAdapter
     private lateinit var recyclerView: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,33 +55,41 @@ class ImagesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView(view)
-        viewModel = ViewModelProvider(this)[ImageListViewModel::class.java]
+        viewModel = (activity as MainActivity).viewModel
         nameCategory.text = category.name
         viewModel.getImage(category.name)
-        viewModel.image.observe(viewLifecycleOwner) {
-            Log.d("Category", it.toString())
-            imagePreviewAdapter.image = it
-
-        }
         setupRecycleView()
-
-        viewModel.stateLoading.observe(viewLifecycleOwner) {
-            when (it) {
-                LOADING -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                SUCCESS_LOAD -> {
+        viewModel.allImages.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+                is Resource.Success -> {
                     progressBar.visibility = View.INVISIBLE
                     recyclerView.visibility = View.VISIBLE
-
+                    failInternet.visibility = View.INVISIBLE
+                    response.data?.let { result ->
+                        imagePreviewAdapter.differ.submitList(result.hits.toList())
+                        val totalPages = result.total / 20 + 2
+                        isLastPage = viewModel.page == totalPages
+                        if(isLastPage) {
+                            recyclerView.setPadding(0, 0, 0, 0)
+                        }
+                    }
                 }
-                FAIL_LOAD -> {
+                is Resource.Error -> {
                     recyclerView.visibility = View.INVISIBLE
                     progressBar.visibility = View.INVISIBLE
                     failInternet.visibility = View.VISIBLE
+                    response.message?.let { message ->
+                        Log.e("Error", "Ошибка $message")
+                    }
+                }
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                    failInternet.visibility = View.INVISIBLE
                 }
             }
-        }
+
+        })
+
     }
 
     private fun setupRecycleView() {
@@ -80,8 +97,45 @@ class ImagesListFragment : Fragment() {
         val layoutManager = GridLayoutManager(context, 2)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = imagePreviewAdapter
+        recyclerView.addOnScrollListener(this@ImagesListFragment.scrollListener)
         clickItemListener()
     }
+
+    var isError = false
+    var isLoading = false
+    var isLastPage = false
+    var isScrolling = false
+
+    val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val layoutManager = recyclerView.layoutManager as GridLayoutManager
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            val visibleItemCount = layoutManager.childCount
+            val totalItemCount = layoutManager.itemCount
+
+            val isNoErrors = !isError
+            val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
+            val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
+            val isNotAtBeginning = firstVisibleItemPosition >= 0
+            val isTotalMoreThanVisible = totalItemCount >= 20
+            val shouldPaginate = isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
+                    isTotalMoreThanVisible && isScrolling
+            if(shouldPaginate) {
+                viewModel.getImage(category.name)
+                isScrolling = false
+            }
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                isScrolling = true
+            }
+        }
+    }
+
 
     private fun setupView(view: View) {
         recyclerView = view.findViewById(R.id.allImageRV)
@@ -111,7 +165,6 @@ class ImagesListFragment : Fragment() {
 
     companion object {
         private const val CATEGORY_ID = "category_id"
-
         @JvmStatic
         fun newInstance(category: Category): ImagesListFragment {
             return ImagesListFragment().apply {

@@ -14,17 +14,11 @@ import com.smolentsev.pixpicture.presentation.adapter.CategoryAdapter
 import com.smolentsev.pixpicture.presentation.viewmodel.CategoryViewModel
 
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+
 
 class CategoryFragment : Fragment() {
     private lateinit var viewModel: CategoryViewModel
     private lateinit var categoryAdapter: CategoryAdapter
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

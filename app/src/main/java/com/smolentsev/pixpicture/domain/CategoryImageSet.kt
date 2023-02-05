@@ -3,7 +3,7 @@ package com.smolentsev.pixpicture.domain
 import com.smolentsev.pixpicture.R
 
 object CategoryImageSet {
-    var image: Int = 0
+    private var image: Int = 0
     fun imageSet(id: Int): Int{
         when(id){
             0-> image = R.drawable.nature

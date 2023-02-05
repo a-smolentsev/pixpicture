@@ -8,6 +8,7 @@ import retrofit2.http.Query
 
 interface ImageApi {
 
-    @GET("/api/?key=$KEY_PUBLIC&per_page=200")
-    suspend fun getImage(@Query("category") category: String):Response<ImagesCategory>
+    @GET("/api/?key=$KEY_PUBLIC&per_page=20")
+    suspend fun getImage(@Query("category") category: String,
+    @Query("page") page: Int = 1):Response<ImagesCategory>
 }
