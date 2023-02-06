@@ -1,6 +1,5 @@
 package com.smolentsev.pixpicture.presentation
 
-import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,21 +10,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.smolentsev.pixpicture.R
-import com.smolentsev.pixpicture.constants.Companion.FAIL_LOAD
-import com.smolentsev.pixpicture.constants.Companion.LOADING
-import com.smolentsev.pixpicture.constants.Companion.SUCCESS_LOAD
-import com.smolentsev.pixpicture.data.ImageApi
 import com.smolentsev.pixpicture.domain.entity.Category
-import com.smolentsev.pixpicture.domain.entity.ImagesCategory
-import com.smolentsev.pixpicture.domain.repository.RepositoryImages
 import com.smolentsev.pixpicture.presentation.adapter.ImageAllAdapter
-import com.smolentsev.pixpicture.presentation.viewmodel.CategoryViewModel
 import com.smolentsev.pixpicture.presentation.viewmodel.ImageListViewModel
-import com.smolentsev.pixpicture.presentation.viewmodel.ImagesListViewModelFactory
 
 
 class ImagesListFragment : Fragment() {
