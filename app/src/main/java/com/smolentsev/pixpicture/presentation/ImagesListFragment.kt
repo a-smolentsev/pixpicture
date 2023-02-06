@@ -43,11 +43,14 @@ class ImagesListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_images_list, container, false)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView(view)
         viewModel = (activity as MainActivity).viewModel
+
         setupRecycleView()
         nameCategory.text = category.name
         viewModel.getImage(category.name)
@@ -88,6 +91,7 @@ class ImagesListFragment : Fragment() {
 
     private fun setupRecycleView() {
         imagePreviewAdapter = ImageAllAdapter()
+
         recyclerView.apply {
           layoutManager = GridLayoutManager(context, 2)
           adapter = imagePreviewAdapter
