@@ -26,12 +26,14 @@ class ImagesListFragment : Fragment() {
     private lateinit var viewModel: ImageListViewModel
     private lateinit var imagePreviewAdapter: ImageAllAdapter
     private lateinit var recyclerView: RecyclerView
+    lateinit var categoryArgs: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkCategory()
         Log.d("fragment_Category", category.name)
+        categoryArgs =category.name
     }
 
     override fun onCreateView(
@@ -46,9 +48,10 @@ class ImagesListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupView(view)
         viewModel = (activity as MainActivity).viewModel
+        setupRecycleView()
         nameCategory.text = category.name
         viewModel.getImage(category.name)
-        setupRecycleView()
+        Log.d("images_categoryname", category.name)
         viewModel.allImages.observe(viewLifecycleOwner, Observer { response ->
             when(response){
                 is Resource.Success -> {
@@ -57,6 +60,7 @@ class ImagesListFragment : Fragment() {
                     failInternet.visibility = View.INVISIBLE
                     response.data?.let { result ->
                         imagePreviewAdapter.differ.submitList(result.hits.toList())
+                        Log.d("images_adapter",result.hits.toString())
                         val totalPages = result.total / 20 + 2
                         isLastPage = viewModel.page == totalPages
                         if(isLastPage) {
@@ -84,10 +88,12 @@ class ImagesListFragment : Fragment() {
 
     private fun setupRecycleView() {
         imagePreviewAdapter = ImageAllAdapter()
-        val layoutManager = GridLayoutManager(context, 2)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = imagePreviewAdapter
-        recyclerView.addOnScrollListener(this@ImagesListFragment.scrollListener)
+        recyclerView.apply {
+          layoutManager = GridLayoutManager(context, 2)
+          adapter = imagePreviewAdapter
+          addOnScrollListener(this@ImagesListFragment.scrollListener)
+        }
+
         clickItemListener()
     }
 
@@ -104,7 +110,6 @@ class ImagesListFragment : Fragment() {
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
-
             val isNoErrors = !isError
             val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
             val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
