@@ -42,7 +42,6 @@ class ImageAllAdapter: RecyclerView.Adapter<ImageAllAdapter.ItemAdapterViewHolde
         }
         Glide.with(viewHolder.itemView)
             .load(_image.largeImageURL)
-            .diskCacheStrategy(ALL)
             .placeholder(R.color.loadcolor)
             .override(1000, 1000)
             .into(viewHolder.imagePreview)
