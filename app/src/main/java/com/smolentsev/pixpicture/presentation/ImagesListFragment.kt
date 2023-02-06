@@ -43,11 +43,14 @@ class ImagesListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_images_list, container, false)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView(view)
         viewModel = (activity as MainActivity).viewModel
+
         setupRecycleView()
         nameCategory.text = category.name
         viewModel.getImage(category.name)
@@ -88,6 +91,7 @@ class ImagesListFragment : Fragment() {
 
     private fun setupRecycleView() {
         imagePreviewAdapter = ImageAllAdapter()
+
         recyclerView.apply {
           layoutManager = GridLayoutManager(context, 2)
           adapter = imagePreviewAdapter
@@ -105,7 +109,6 @@ class ImagesListFragment : Fragment() {
     val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-
             val layoutManager = recyclerView.layoutManager as GridLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val visibleItemCount = layoutManager.childCount

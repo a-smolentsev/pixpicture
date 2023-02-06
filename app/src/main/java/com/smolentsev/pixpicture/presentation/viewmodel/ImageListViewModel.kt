@@ -24,17 +24,31 @@ class ImageListViewModel(app: Application, val imagesRepo: RepositoryImages) :
 
     var page = 1
     var allImagesResponse: ImagesCategory? = null
-
+    var oldCategoryName: String? = null
+    var newCategoryName: String? = null
 
     fun getImage(category: String) = viewModelScope.launch {
+        newCategoryName=category
         safeCallGetImages(category)
+
+
     }
 
 
      private fun checkResponse(response: Response<ImagesCategory>): Resource<ImagesCategory> {
      if (response.isSuccessful) {
            response.body()?.let { resultResponse ->
-               return Resource.Success(resultResponse)
+             if (allImagesResponse == null || oldCategoryName != newCategoryName) {
+                 page=1
+                 oldCategoryName = newCategoryName
+                 allImagesResponse = resultResponse
+               } else {
+                   page++
+                   val oldImages = allImagesResponse?.hits
+                   val newImages = resultResponse.hits
+                   oldImages?.addAll(newImages)
+               }
+               return Resource.Success(allImagesResponse ?: resultResponse)
            }
        }
        return Resource.Error(response.message())
@@ -45,6 +59,7 @@ class ImageListViewModel(app: Application, val imagesRepo: RepositoryImages) :
         allImages.postValue(Resource.Loading())
         try {
             if (hasInternetCheck()) {
+
                 val response = imagesRepo.getImagesByCategory(category, page)
                 Log.d("Image_check_respose",response.body().toString())
                 allImages.postValue(checkResponse(response))
