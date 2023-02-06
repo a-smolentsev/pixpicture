@@ -24,7 +24,7 @@ class ImageListViewModel(app: Application, val imagesRepo: RepositoryImages) :
 
     var page = 1
     var allImagesResponse: ImagesCategory? = null
-
+    var oldCategoryName: String? = null
 
     fun getImage(category: String) = viewModelScope.launch {
         safeCallGetImages(category)
@@ -34,7 +34,16 @@ class ImageListViewModel(app: Application, val imagesRepo: RepositoryImages) :
      private fun checkResponse(response: Response<ImagesCategory>): Resource<ImagesCategory> {
      if (response.isSuccessful) {
            response.body()?.let { resultResponse ->
-               return Resource.Success(resultResponse)
+               page++
+               oldCategoryName = constants.categoryArg
+             if (allImagesResponse == null && oldCategoryName != constants.categoryArg) {
+                   allImagesResponse = resultResponse
+               } else {
+                   val oldImages = allImagesResponse?.hits
+                   val newImages = resultResponse.hits
+                   oldImages?.addAll(newImages)
+               }
+               return Resource.Success(allImagesResponse ?: resultResponse)
            }
        }
        return Resource.Error(response.message())
